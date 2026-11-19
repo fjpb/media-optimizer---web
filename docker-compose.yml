@@ -1,0 +1,15 @@
+services:
+  media-optimizer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: media-optimizer-web
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8090}:80"
+    environment:
+      - SERVER_NAME=:80
+      - CADDY_GLOBAL_OPTIONS=auto_https off
+    volumes:
+      - ./:/app
+      - /app/storage/tmp

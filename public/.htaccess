@@ -1,0 +1,14 @@
+# Apache configuration for Media Optimizer
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Si el archivo o carpeta existe físicamente en public/, servirlo directamente
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # De lo contrario, redirigir todas las peticiones a index.php
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>
+
+# Prevenir listado de directorios
+Options -Indexes

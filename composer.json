@@ -1,0 +1,22 @@
+{
+  "name": "media-optimizer/media-optimizer-web",
+  "description": "Herramienta interna ligera de optimización, conversión a WebP y redimensión masiva de imágenes sin base de datos.",
+  "type": "project",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.4",
+    "ext-gd": "*",
+    "ext-zip": "*",
+    "ext-exif": "*",
+    "bramus/router": "^1.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  }
+}
