@@ -2,7 +2,7 @@
 
 > **Microservicio y herramienta interna ligera para optimización masiva de imágenes, conversión a WebP y redimensión inteligente con límite de peso (KB).**
 > Diseñado en **PHP 8.4** con arquitectura **100% Stateless (Cero Base de Datos)**.
-> Para conocer el contexto, los orígenes y la evolución institucional, consulta [HISTORIA.md](HISTORIA.md).
+> Consulta [HISTORIA.md](HISTORIA.md) para el contexto del proyecto y [SECURITY.md](SECURITY.md) para directrices de seguridad y estabilidad.
 
 ---
 

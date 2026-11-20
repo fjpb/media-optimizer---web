@@ -678,21 +678,34 @@
                     img.src = URL.createObjectURL(file);
                 },
 
-                handleDrop(e) {
-                    this.isDragging = false;
-                    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
-                    if (files.length > 0) {
-                        this.stagedFiles = [...this.stagedFiles, ...files];
-                        this.inspectFirstImage(files[0]);
+                addFiles(newFiles) {
+                    const validFiles = newFiles.filter(f => f.type.startsWith('image/'));
+                    const maxAllowed = 20;
+                    const availableSlots = maxAllowed - this.stagedFiles.length;
+
+                    if (availableSlots <= 0) {
+                        alert('Has alcanzado el límite máximo de 20 imágenes por lote para garantizar la estabilidad del servidor.');
+                        return;
+                    }
+
+                    if (validFiles.length > availableSlots) {
+                        alert(`Solo se agregaron las primeras ${availableSlots} imágenes para no superar el límite de 20 por lote.`);
+                    }
+
+                    const toAdd = validFiles.slice(0, availableSlots);
+                    this.stagedFiles = [...this.stagedFiles, ...toAdd];
+                    if (toAdd.length > 0 && this.stagedFiles.length === toAdd.length) {
+                        this.inspectFirstImage(toAdd[0]);
                     }
                 },
 
+                handleDrop(e) {
+                    this.isDragging = false;
+                    this.addFiles(Array.from(e.dataTransfer.files));
+                },
+
                 handleFileSelect(e) {
-                    const files = Array.from(e.target.files);
-                    if (files.length > 0) {
-                        this.stagedFiles = [...this.stagedFiles, ...files];
-                        this.inspectFirstImage(files[0]);
-                    }
+                    this.addFiles(Array.from(e.target.files));
                     e.target.value = '';
                 },
 
@@ -710,6 +723,10 @@
 
                 async processFiles() {
                     if (this.stagedFiles.length === 0) return;
+                    if (this.stagedFiles.length > 20) {
+                        alert('Por seguridad del servidor, el lote no puede superar las 20 imágenes.');
+                        return;
+                    }
                     this.isProcessing = true;
 
                     const formData = new FormData();

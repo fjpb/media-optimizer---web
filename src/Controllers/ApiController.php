@@ -61,6 +61,15 @@ class ApiController
             return;
         }
 
+        // Control de tamaño máximo individual
+        if (!empty($file['size']) && $file['size'] > WebController::MAX_FILE_SIZE_BYTES) {
+            $this->jsonResponse([
+                'success' => false,
+                'error' => 'El archivo supera el tamaño máximo permitido de 30 MB.',
+            ], 400);
+            return;
+        }
+
         // Obtener parámetros
         $presetKey = $_POST['preset'] ?? $_GET['preset'] ?? null;
         $options = [];
@@ -141,6 +150,10 @@ class ApiController
                 'success' => false,
                 'error' => $e->getMessage(),
             ], 422);
+        } finally {
+            if (function_exists('gc_collect_cycles')) {
+                gc_collect_cycles();
+            }
         }
     }
 

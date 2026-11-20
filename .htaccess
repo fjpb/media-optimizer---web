@@ -1,0 +1,17 @@
+# Bloquear acceso a carpetas internas y archivos sensibles
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(src|views|storage|docker)(\/|$) - [F,L,NC]
+</IfModule>
+
+<FilesMatch "(^\.|\.env|composer\.(json|lock)|Dockerfile|Caddyfile|README\.md|HISTORIA\.md|SECURITY\.md)">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+Options -Indexes

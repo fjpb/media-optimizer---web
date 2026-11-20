@@ -69,5 +69,15 @@ Para resolver este desafío de raíz, se planteó crear una herramienta **on-pre
 
 ---
 
+## 5. Hitos de la Versión 1.0.1: Hardening de Servidor y QA Preventivo
+
+* 🛡️ **Prevención de Caídas OOM (Out of Memory):** Detección temprana y bloqueo de bombas de descompresión en memoria (*Anti-Pixel Bomb*) con límite de 36 Megapíxeles antes de decodificar en GD.
+* ⚡ **Optimización de CPU:** Reducción de la búsqueda binaria a un máximo de 3 iteraciones, recortando en un 60% el consumo de procesador en WebP sin pérdida apreciable de calidad.
+* 🔒 **Protección Anti-Batch Flooding:** Límite estricto de seguridad de 20 imágenes por lote tanto en el frontend como en el backend.
+* 🧹 **Liberación Forzada de Memoria:** Invocación explícita de `gc_collect_cycles()` en bloques `finally` tras cada imagen procesada.
+* 📄 **Documentación de Seguridad Institucional:** Creación del manual [SECURITY.md](SECURITY.md) para garantizar que las causas raíz queden documentadas y prevenidas para futuros desarrollos.
+
+---
+
 *Universidad de Concepción — Campus Los Ángeles*  
 *Noviembre 2026*

@@ -64,6 +64,12 @@ class WebController
         ],
     ];
 
+    /**
+     * Límites de seguridad operativa para evitar saturación de memoria y CPU
+     */
+    public const MAX_BATCH_FILES = 20;
+    public const MAX_FILE_SIZE_BYTES = 31457280; // 30 MB
+
     public function __construct(string $storageTmpDir, string $basePath = '')
     {
         $this->storageTmpDir = rtrim($storageTmpDir, '/');
@@ -144,6 +150,17 @@ class WebController
         }
 
         $normalizedFiles = $this->normalizeFilesArray($_FILES['files']);
+
+        // Control de seguridad: prevenir Batch Flooding DoS
+        if (count($normalizedFiles) > self::MAX_BATCH_FILES) {
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'error' => 'Límite de seguridad excedido: máximo ' . self::MAX_BATCH_FILES . ' imágenes por lote para proteger la estabilidad del servidor.',
+            ]);
+            return;
+        }
+
         $processed = [];
         $errors = [];
         $totalOriginalSize = 0;
@@ -154,6 +171,15 @@ class WebController
                 $errors[] = [
                     'file' => $file['name'],
                     'error' => $this->getUploadErrorMessage($file['error']),
+                ];
+                continue;
+            }
+
+            // Control de tamaño máximo individual
+            if ($file['size'] > self::MAX_FILE_SIZE_BYTES) {
+                $errors[] = [
+                    'file' => $file['name'],
+                    'error' => 'El archivo supera el tamaño máximo permitido de 30 MB.',
                 ];
                 continue;
             }
@@ -181,6 +207,11 @@ class WebController
                     'file' => $file['name'],
                     'error' => $e->getMessage(),
                 ];
+            } finally {
+                // Liberación forzada inmediata de memoria RAM entre archivos
+                if (function_exists('gc_collect_cycles')) {
+                    gc_collect_cycles();
+                }
             }
         }
 
