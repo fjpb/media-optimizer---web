@@ -312,10 +312,6 @@ class WebController
             echo "El lote no existe o ha expirado.";
             return;
         }
-            http_response_code(404);
-            echo "El lote no existe o ha expirado.";
-            return;
-        }
 
         try {
             $zipFilename = 'media_optimizer_' . $batchId . '.zip';
