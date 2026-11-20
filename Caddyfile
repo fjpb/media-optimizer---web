@@ -6,17 +6,5 @@
 :80 {
     root * /app/public
     encode zstd gzip
-
-    # Servir archivos estáticos directamente si existen
-    @static {
-        file
-    }
-    handle @static {
-        file_server
-    }
-
-    # Procesar todo lo demás a través de PHP
-    handle {
-        php_server
-    }
+    php_server
 }

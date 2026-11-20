@@ -5,7 +5,10 @@ declare(strict_types=1);
 // Configuración de límites seguros para evitar caída del servidor (OOM Killer / Worker Hang)
 @ini_set('memory_limit', '256M');
 @ini_set('max_execution_time', '90');
-@ini_set('display_errors', '0');
+@ini_set('log_errors', '1');
+if (getenv('APP_ENV') === 'production') {
+    @ini_set('display_errors', '0');
+}
 
 // Cargar autoloader de Composer o autoloader nativo como fallback
 if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
